@@ -1,6 +1,6 @@
 # docker_setup
 
-I have modified a standard machine learning docker container (see https://github.com/ufoym/deepo) with some vim configurations, linux UID/GID/UNAME and permission initializations, as well as a Jupyter Notebook server.
+I have modified a standard machine learning docker container (see https://github.com/ufoym/deepo) with some vim configurations, a Jupyter Notebook server, and with `uid/gid/uname` initialized to agree with your server uid/gid/uname configuration.
 
 To set this up...
 
@@ -10,12 +10,14 @@ To set this up...
 
 `docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) --build-arg UNAME=$(id -u -n) -f Dockerfile .`
 
-`docker run -u $(id -u):$(id -g) -it -d --runtime=nvidia --name UNAME=$(id -u -n) -p [PORT_NUMBER]:8888 [VOLUME_ARGS] lihenryhfl/general-docker /bin/bash`
+`docker run -u $(id -u):$(id -g) -it -d --runtime=nvidia --name $(id -u -n) -p [PORT_NUMBER]:8888 [VOLUME_ARGS] lihenryhfl/general-docker /bin/bash`
 
 where you replace two things: 
 1. `[PORT_NUMBER]` with an open port (server-side) you would like to forward the jupyter notebook port (docker-side) to.
 2. `[VOLUME_ARGS]` with any volumes you want to attach to your docker. These volumes will persist after you end your Docker instance. The format for  is `-v [SERVER_DIR]:[DOCKER_DIR]`. For example, I always have the arguments:
 `-v ~/projects/docker_bashrc:/home/henry/.bashrc -v ~/projects:/home/henry/projects -v /data/henry:/data`
+
+And voila! You have a running docker with name `$(id -u -n)` (your server `uname`).
 
 Extra notes:
 
