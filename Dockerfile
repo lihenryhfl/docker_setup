@@ -17,7 +17,7 @@ RUN whoami
 USER $UNAME
 RUN whoami
 
-RUN curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh && printf 'imap jk <Esc>\nset mouse=a\nlet mapleader= ";"' >> ~/.vimrc.local
+RUN curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh && printf 'imap jk <Esc>\nset mouse=a\nlet mapleader= ";"\nset autoindent\nset expandtab\n' >> ~/.vimrc.local
 COPY requirements.txt /projects/requirements.txt
 RUN export PATH="$PATH:/home/$UNAME/.local/bin"
 RUN pip install --upgrade pip
@@ -25,6 +25,8 @@ RUN pip install -r /projects/requirements.txt
 RUN whoami
 RUN jupyter notebook --generate-config
 RUN printf "\nc.NotebookApp.password = u'argon2:\$argon2id\$v=19\$m=10240,t=10,p=8\$vBR5GSzutggf1gn6f/yZyA\$B/NHZh1X/sA4H0sYjaUyQQ'\nc.NotebookApp.ip = '0.0.0.0'\n" >> /home/$UNAME/.jupyter/jupyter_notebook_config.py
+RUN tmux show -g | cat > /home/$UNAME/.tmux.conf
+RUN printf "\nset-option -g history-limit 10000\n" >> /home/$UNAME/.tmux.conf
+RUN git config --global user.email "li.henry.hfl@gmail.com"; git config --global user.name "Henry"
 RUN curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
-
 

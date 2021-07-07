@@ -2,6 +2,5 @@ jupyter
 virtualenv
 ipykernel
 opentsne
-mhcflurry
 transformers
 
