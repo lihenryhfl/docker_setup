@@ -9,15 +9,16 @@ RUN add-apt-repository ppa:jonathonf/vim && apt-get update && apt-get install -y
 
 RUN echo "UNAME: $UNAME, UID: $UID, GID: $GID"
 RUN groupadd -g $GID -o $UNAME
-RUN useradd -m -u $UID -g $GID -o -s /bin/bash $UNAME
-RUN usermod -aG sudo $UNAME
+RUN useradd -m -u $UID -g $GID -s /bin/bash -o $UNAME && echo "$UNAME:$UNAME" | chpasswd && adduser $UNAME sudo
+#RUN usermod -aG sudo $UNAME
 RUN sudo chown -R $UNAME:$UNAME /home/$UNAME/
 RUN sudo passwd -d $UNAME
 RUN whoami
 USER $UNAME
 RUN whoami
 
-RUN curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh && printf 'imap jk <Esc>\nset mouse=a\nlet mapleader= ";"\nset autoindent\nset expandtab\n' >> ~/.vimrc.local
+RUN curl https://j.mp/spf13-vim3 -L > spf13-vim.sh && sh spf13-vim.sh 
+RUN printf "imap jk <Esc>\nset mouse=a\nlet mapleader=';'\nset autoindent\nset expandtab\nset wrap" >> ~/.vimrc.local
 COPY requirements.txt /projects/requirements.txt
 RUN export PATH="$PATH:/home/$UNAME/.local/bin"
 RUN pip install --upgrade pip
