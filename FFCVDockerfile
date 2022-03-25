@@ -1,0 +1,77 @@
+FROM pytorch/pytorch:latest
+
+#FROM ufoym/deepo
+ARG UNAME
+ARG UID
+ARG GID
+WORKDIR /home/$UNAME/projects
+SHELL ["/bin/bash", "-c"]
+RUN whoami
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common
+RUN add-apt-repository ppa:jonathonf/vim && apt-get update
+#RUN su -
+RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-recommends \ 
+	vim-gtk3 \
+	tmux \
+	git \
+	python3-tk \
+	build-essential \
+	ffmpeg \
+	python3-venv \ 
+	texlive-xetex \
+	pandoc \
+        software-properties-common \
+        curl \
+	python-setuptools
+#	sudo
+
+RUN conda update -n base -c defaults conda
+RUN conda install pip
+
+RUN echo "UNAME: $UNAME, UID: $UID, GID: $GID"
+RUN groupadd -g $GID -o $UNAME
+RUN useradd -m -u $UID -g $GID -s /bin/bash -o $UNAME && echo "$UNAME:$UNAME" | chpasswd && adduser $UNAME sudo
+RUN usermod -aG sudo $UNAME
+#RUN sudo passwd -d $UNAME
+RUN chown -R $UNAME:$UNAME /home/$UNAME/
+#RUN passwd -d $UNAME
+RUN whoami
+USER $UNAME
+RUN whoami
+
+RUN sh <(curl https://j.mp/spf13-vim3 -L)
+RUN printf "imap jk <Esc>\nset mouse=a\nlet mapleader=';'\nset autoindent\nset expandtab\nset wrap" >> ~/.vimrc.local
+COPY requirements.txt /projects/requirements.txt
+ENV HOME="/home/$UNAME"
+ENV PATH="$HOME/.local/bin:${PATH}"
+RUN echo $PATH
+RUN pip install --upgrade pip
+RUN pip install -r /projects/requirements.txt
+RUN ls /home/henry/.local/bin
+RUN $HOME/.local/bin/jupyter notebook --generate-config
+RUN printf "\nc.NotebookApp.password = u'argon2:\$argon2id\$v=19\$m=10240,t=10,p=8\$vBR5GSzutggf1gn6f/yZyA\$B/NHZh1X/sA4H0sYjaUyQQ'\nc.NotebookApp.ip = '0.0.0.0'\n" >> /home/$UNAME/.jupyter/jupyter_notebook_config.py
+RUN tmux show -g | cat > /home/$UNAME/.tmux.conf
+RUN printf "\nset-option -g history-limit 10000\n" >> /home/$UNAME/.tmux.conf
+RUN git config --global user.email "li.henry.hfl@gmail.com"; git config --global user.name "Henry"
+RUN curl -L https://iterm2.com/shell_integration/install_shell_integration_and_utilities.sh | bash
+
+RUN conda create -n ffcv python=3.9 \
+        cupy \
+        pkg-config \
+        compilers \
+        libjpeg-turbo \
+        opencv \
+        pytorch \
+        torchvision \
+        cudatoolkit=11.3 \
+	ipykernel \
+        numba -c pytorch -c conda-forge 
+
+RUN echo "source activate" >> ~/.bashrc
+RUN echo "conda activate ffcv" >> ~/.bashrc
+
+RUN git clone https://github.com/libffcv/ffcv.git  
+
+RUN conda run -n ffcv pip install ffcv
+RUN conda run -n ffcv python -m ipykernel install --user --name ffcv --display-name "ffcv"
+RUN conda init

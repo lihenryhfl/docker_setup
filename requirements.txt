@@ -1,6 +1,7 @@
 jupyter
+matplotlib
 virtualenv
 ipykernel
-opentsne
-transformers
+tensorflow-gpu
+setuptools
 
