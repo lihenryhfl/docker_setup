@@ -1,7 +1,9 @@
+setuptools
+torch
+torchvision
 jupyter
 matplotlib
 virtualenv
 ipykernel
-tensorflow-gpu
-setuptools
+ninja
 
