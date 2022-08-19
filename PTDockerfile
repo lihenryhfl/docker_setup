@@ -1,14 +1,17 @@
 #FROM pytorch/pytorch:latest
-FROM nvidia/cuda:11.4.0-devel-ubuntu20.04
+#FROM nvidia/cuda:11.4.0-devel-ubuntu20.04
+FROM nvidia/cuda:11.4.2-cudnn8-runtime-ubuntu20.04
 
 ARG UNAME
 ARG UID
 ARG GID
 WORKDIR /home/$UNAME/projects
 SHELL ["/bin/bash", "-c"]
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common dialog apt-utils
+RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-recommends \
+    software-properties-common \
+    dialog \
+    apt-utils \
     vim-gtk3 \
     tmux \
     git \
@@ -23,7 +26,7 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-re
     curl \
     python3-setuptools \
     sudo \
-	python3-pip
+    python3-pip
 
 #RUN echo "UNAME: $UNAME, UID: $UID, GID: $GID"
 RUN groupadd -g $GID -o $UNAME

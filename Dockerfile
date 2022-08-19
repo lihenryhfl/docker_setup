@@ -1,4 +1,5 @@
-FROM pytorch/pytorch:latest
+#FROM pytorch/pytorch:latest
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 ARG UNAME
 ARG UID
@@ -22,7 +23,8 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-re
     curl \
     python3-setuptools \
     sudo \
-    python3-pip
+    python3-pip \
+    wget
 
 #RUN echo "UNAME: $UNAME, UID: $UID, GID: $GID"
 RUN groupadd -g $GID -o $UNAME
@@ -31,6 +33,7 @@ RUN usermod -aG sudo $UNAME
 RUN sudo chown -R $UNAME:$UNAME /home/$UNAME/
 USER $UNAME
 
+RUN sudo dpkg -i /projects/gcm-linux_amd64.2.0.785.deb
 RUN sh <(curl https://j.mp/spf13-vim3 -L)
 RUN printf "imap jk <Esc>\nset mouse=a\nlet mapleader=';'\nset autoindent\nset expandtab\nset wrap" >> ~/.vimrc.local
 RUN python3 -m pip install --upgrade pip
