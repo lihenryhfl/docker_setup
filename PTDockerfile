@@ -1,6 +1,5 @@
 #FROM pytorch/pytorch:latest
-#FROM nvidia/cuda:11.4.0-devel-ubuntu20.04
-FROM nvidia/cuda:11.4.2-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
 ARG UNAME
 ARG UID
@@ -28,7 +27,6 @@ RUN DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-re
     sudo \
     python3-pip
 
-#RUN echo "UNAME: $UNAME, UID: $UID, GID: $GID"
 RUN groupadd -g $GID -o $UNAME
 RUN useradd -m -o -u $UID -g $GID $UNAME && echo "$UNAME:$UNAME" | chpasswd
 RUN usermod -aG sudo $UNAME
@@ -46,3 +44,4 @@ RUN $HOME/.local/bin/jupyter notebook --generate-config
 RUN printf "\nc.NotebookApp.password = u'argon2:\$argon2id\$v=19\$m=10240,t=10,p=8\$vBR5GSzutggf1gn6f/yZyA\$B/NHZh1X/sA4H0sYjaUyQQ'\nc.NotebookApp.ip = '0.0.0.0'\n" >> /home/$UNAME/.jupyter/jupyter_notebook_config.py
 RUN tmux show -g | cat > /home/$UNAME/.tmux.conf
 RUN printf "\nset-option -g history-limit 10000\nset-option -g default-shell /bin/bash\n" >> /home/$UNAME/.tmux.conf
+RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113

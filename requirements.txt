@@ -1,3 +1,5 @@
+sklearn
+pandas
 setuptools
 torch
 torchvision
@@ -6,4 +8,10 @@ matplotlib
 virtualenv
 ipykernel
 ninja
-
+hydra-core
+rich
+pytorch-lightning
+einops
+opt_einsum
+torchtext
+datasets
