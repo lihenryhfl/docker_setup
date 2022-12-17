@@ -10,8 +10,7 @@ ipykernel
 ninja
 hydra-core
 rich
-pytorch-lightning
 einops
-opt_einsum
 torchtext
 datasets
+jupyterlab

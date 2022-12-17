@@ -35,7 +35,7 @@ USER $UNAME
 
 RUN sudo dpkg -i /projects/gcm-linux_amd64.2.0.785.deb
 RUN sh <(curl https://j.mp/spf13-vim3 -L)
-RUN printf "imap jk <Esc>\nset mouse=a\nlet mapleader=';'\nset autoindent\nset expandtab\nset wrap" >> ~/.vimrc.local
+RUN printf "imap jk <Esc>\nset mouse=a\nlet mapleader=';'\nset autoindent\nset expandtab\nset wrap\nset tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab" >> ~/.vimrc.local
 RUN python3 -m pip install --upgrade pip
 COPY requirements.txt /projects/requirements.txt
 ENV HOME="/home/$UNAME"
