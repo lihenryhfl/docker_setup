@@ -8,9 +8,23 @@ matplotlib
 virtualenv
 ipykernel
 ninja
-hydra-core
 rich
 einops
 torchtext
 datasets
 jupyterlab
+absl-py
+clu
+flax
+#jax # TPU version installed separately
+#jaxlib # TPU version installed separately
+matplotlib
+ml_collections
+numpy
+tensorflow
+tensorflow-datasets
+tensorflow-probability
+optax
+ipython
+pywavelets
+jaxwt
