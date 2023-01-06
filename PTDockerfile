@@ -46,3 +46,5 @@ RUN printf "\nc.NotebookApp.password = u'argon2:\$argon2id\$v=19\$m=10240,t=10,p
 RUN tmux show -g | cat > /home/$UNAME/.tmux.conf
 RUN printf "\nset-option -g history-limit 10000\nset-option -g default-shell /bin/bash\n" >> /home/$UNAME/.tmux.conf
 RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+
