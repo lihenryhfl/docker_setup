@@ -1,6 +1,7 @@
 #FROM pytorch/pytorch:latest
 #FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+#FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:12.3.2-cudnn9-devel-ubuntu20.04
 
 ARG UNAME
 ARG UID
@@ -44,7 +45,8 @@ RUN pip install -r /projects/requirements.txt
 RUN $HOME/.local/bin/jupyter notebook --generate-config
 RUN printf "\nc.NotebookApp.password = u'argon2:\$argon2id\$v=19\$m=10240,t=10,p=8\$vBR5GSzutggf1gn6f/yZyA\$B/NHZh1X/sA4H0sYjaUyQQ'\nc.NotebookApp.ip = '0.0.0.0'\n" >> /home/$UNAME/.jupyter/jupyter_notebook_config.py
 RUN tmux show -g | cat > /home/$UNAME/.tmux.conf
-RUN printf "\nset-option -g history-limit 10000\nset-option -g default-shell /bin/bash\n" >> /home/$UNAME/.tmux.conf
+RUN printf "\nset-option -g history-limit 20000\nset-option -g default-shell /bin/bash\n" >> /home/$UNAME/.tmux.conf
 RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 RUN pip3 install --upgrade "jax[cuda]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+git config --global credential.helper store
 
